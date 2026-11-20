@@ -1,0 +1,21 @@
+[
+  {
+    "version": "0.1.0",
+    "url": "https://github.com/example/plugin-demo-store/releases/download/v0.1.0/demo-store-0.1.0.zip",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000001",
+    "size": 1234,
+    "apiVersion": 1,
+    "minApp": "0.7.0",
+    "released": "2026-11-20",
+    "notes": "First release.",
+    "yanked": true
+  },
+  {
+    "version": "0.2.0",
+    "url": "https://github.com/example/plugin-demo-store/releases/download/v0.2.0/demo-store-0.2.0.zip",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000002",
+    "apiVersion": 1,
+    "minApp": "0.7.0",
+    "released": "2026-11-21"
+  }
+]

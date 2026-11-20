@@ -1,0 +1,12 @@
+{
+  "name": "questkeep-plugin-registry",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "validate:online": "node scripts/validate.mjs --online",
+    "build": "node scripts/build-index.mjs",
+    "test": "node --test scripts/*.test.mjs"
+  }
+}

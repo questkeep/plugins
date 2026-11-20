@@ -1,0 +1,26 @@
+name: Links
+
+# Weekly: every listed version must still download and match its pinned hash and plugin.json.
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Validate every version online
+        run: node scripts/validate.mjs --online --all

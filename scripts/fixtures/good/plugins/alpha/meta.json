@@ -1,0 +1,10 @@
+{
+  "id": "alpha",
+  "name": "alpha theme",
+  "summary": "Sorts before Demo Store, ignoring case.",
+  "description": "Used by the registry tests only.",
+  "author": "Test Author",
+  "repository": "https://github.com/example/plugin-alpha",
+  "license": "Apache-2.0",
+  "kinds": ["theme"]
+}

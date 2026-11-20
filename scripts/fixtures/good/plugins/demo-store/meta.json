@@ -1,0 +1,12 @@
+{
+  "id": "demo-store",
+  "name": "Demo Store",
+  "summary": "A fixture plugin that adds a store.",
+  "description": "Used by the registry tests only.",
+  "author": "Test Author",
+  "repository": "https://github.com/example/plugin-demo-store",
+  "homepage": "https://example.com/demo",
+  "license": "MIT",
+  "tags": ["store", "demo"],
+  "kinds": ["store", "theme"]
+}
