@@ -1,0 +1,11 @@
+{
+  "id": "bsmanager",
+  "name": "BSManager",
+  "summary": "Lists the Beat Saber instances managed by BSManager as games.",
+  "description": "A store plugin that reads the instances BSManager keeps and lists each Beat Saber instance as a game in Questkeep, so you can start a modded instance from your library. You choose the folder that holds your instances in the plugin's settings.",
+  "author": "Questkeep",
+  "repository": "https://github.com/questkeep/plugin-bsmanager",
+  "license": "MIT",
+  "tags": ["beat-saber", "bsmanager", "vr"],
+  "kinds": ["store"]
+}
