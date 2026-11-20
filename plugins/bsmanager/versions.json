@@ -1,0 +1,12 @@
+[
+  {
+    "version": "0.1.0",
+    "url": "https://github.com/questkeep/plugin-bsmanager/releases/download/v0.1.0/bsmanager-0.1.0.zip",
+    "sha256": "ade1defb2c67814cfc5f17193422e5aa410463645ea759b9703bda05438cc066",
+    "size": 93086,
+    "apiVersion": 1,
+    "minApp": "0.7.0",
+    "released": "2026-11-20",
+    "notes": "First release: list BSManager's Beat Saber instances. You choose the instances folder in Settings > Plugins (it defaults to BSManager's usual location); needs Questkeep 0.7.0."
+  }
+]
