@@ -8,5 +8,15 @@
     "minApp": "0.7.0",
     "released": "2026-11-20",
     "notes": "First release: list BSManager's Beat Saber instances. You choose the instances folder in Settings > Plugins (it defaults to BSManager's usual location); needs Questkeep 0.7.0."
+  },
+  {
+    "version": "0.2.0",
+    "url": "https://github.com/questkeep/plugin-bsmanager/releases/download/v0.2.0/bsmanager-0.2.0.zip",
+    "sha256": "420ff30158ba733a8cc90bde638abb39a5c10d4e01ad1a61a9157f8acd02eb47",
+    "size": 93951,
+    "apiVersion": 1,
+    "minApp": "0.7.0",
+    "released": "2026-11-20",
+    "notes": "Open launcher: BSManager appears in the title bar's Open launcher menu and starts BSManager.exe (a second folder setting, BSManager program folder, defaults to its usual install location). Needs Questkeep 0.7.0."
   }
 ]
