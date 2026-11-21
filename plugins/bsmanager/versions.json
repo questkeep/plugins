@@ -18,5 +18,15 @@
     "minApp": "0.7.0",
     "released": "2026-11-20",
     "notes": "Open launcher: BSManager appears in the title bar's Open launcher menu and starts BSManager.exe (a second folder setting, BSManager program folder, defaults to its usual install location). Needs Questkeep 0.7.0."
+  },
+  {
+    "version": "0.3.0",
+    "url": "https://github.com/questkeep/plugin-bsmanager/releases/download/v0.3.0/bsmanager-0.3.0.zip",
+    "sha256": "c917a64ca3ab168bcaf80ec3c6c419c84fd9d2cd28564092836c5b79613ee6b3",
+    "size": 100877,
+    "apiVersion": 1,
+    "minApp": "0.7.0",
+    "released": "2026-11-21",
+    "notes": "BSManager is found automatically: the plugin reads BSManager's own settings to locate your instances folder (also when you moved BSManager's installation folder) and its Apps list entry to find the program for the Open launcher menu, so there are no folders to choose any more. It now asks for read-only access to your files and the Windows registry, which Questkeep shows when you install it."
   }
 ]
