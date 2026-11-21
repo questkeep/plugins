@@ -2,7 +2,7 @@
   "name": "questkeep-plugin-registry",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=24" },
+  "engines": { "node": ">=26" },
   "scripts": {
     "validate": "node scripts/validate.mjs",
     "validate:online": "node scripts/validate.mjs --online",
