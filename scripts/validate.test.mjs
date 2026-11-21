@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { compareSemver, findPluginJson, validateAll, validateIcon, validateMeta, validateVersions } from "./validate.mjs";
+import { MIN_APP_BROAD, checkManifestPermissions, compareSemver, findPluginJson, validateAll, validateIcon, validateMeta, validateVersions } from "./validate.mjs";
 
 const FIXTURE = fileURLToPath(new URL("./fixtures/good", import.meta.url));
 
@@ -128,4 +128,36 @@ test("plugin.json lookup in a zip listing", () => {
   assert.equal(findPluginJson(["a/plugin.json", "b/x"]), undefined);
   assert.equal(findPluginJson(["a/b/plugin.json", "a/x"]), undefined);
   assert.equal(findPluginJson(["demo\\plugin.json"]), "demo\\plugin.json");
+});
+
+test("broad access: hosts of a plugin with filesystem or registry", () => {
+  const check = (permissions, minApp = MIN_APP_BROAD) => checkManifestPermissions({ permissions }, { minApp });
+  const ok = check({ filesystem: "read", http: ["api.example.com"], login: { domains: ["example.com"] } });
+  assert.deepEqual(ok, { errors: [], warnings: [] });
+  for (const bad of ["*.example.com", "foo.github.io", "https://x.pages.dev/api", "bucket.s3.amazonaws.com", "a.b.workers.dev", "github.io"]) {
+    const r = check({ registry: "read", http: [bad] });
+    assert.ok(hasProblem(r.errors, JSON.stringify(bad)), bad);
+  }
+  assert.ok(hasProblem(check({ filesystem: "read", login: { domains: ["me.netlify.app"] } }).errors, "permissions.login.domains"));
+  // googleapis.com is not a shared-hosting domain; lookalikes are fine
+  assert.deepEqual(check({ filesystem: "read", http: ["www.googleapis.com", "notgithub.io.example.com", "mygithub.io"] }).errors, []);
+  // without filesystem/registry the host rules do not apply
+  assert.deepEqual(check({ http: ["foo.github.io", "*.example.com"] }).errors, []);
+  const local = check({ filesystem: "read", http: ["http://localhost:8080"] });
+  assert.deepEqual(local.errors, []);
+  assert.ok(hasProblem(local.warnings, "needs a stated reason"));
+});
+
+test("broad access: minApp", () => {
+  const check = (permissions, minApp) => checkManifestPermissions({ permissions }, { minApp }).errors;
+  for (const perms of [{ filesystem: "read" }, { registry: "read" }, { launcher: { processNames: ["a.exe"] } }, { login: { title: "t", url: "https://x.example", domains: ["x.example"] } }]) {
+    assert.ok(hasProblem(check(perms, undefined), "needs \"minApp\""));
+    assert.ok(hasProblem(check(perms, "0.6.9"), "need at least 0.7.0"));
+    assert.ok(hasProblem(check(perms, "0.7.0-rc.1"), "need at least"));
+    assert.deepEqual(check(perms, "0.7.0"), []);
+    assert.deepEqual(check(perms, "0.10.0"), []);
+    assert.deepEqual(check(perms, "1.0.0"), []);
+  }
+  assert.deepEqual(check({ http: ["api.example.com"] }, "0.1.0"), []);
+  assert.deepEqual(checkManifestPermissions({}, { minApp: "0.1.0" }), { errors: [], warnings: [] });
 });

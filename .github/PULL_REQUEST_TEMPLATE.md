@@ -15,6 +15,8 @@
 - [ ] `sha256` is of the exact file attached to the GitHub release, and the release is not a draft
 - [ ] `apiVersion` and `minApp` are correct for this build
 - [ ] No obfuscated or minified-only code: the zip can be built from the public source
+- [ ] If the plugin declares `filesystem` or `registry`: the PR lists every web host (`http`) and sign-in domain (`login.domains`) and why the plugin needs it, with no wildcards or shared-hosting domains
+- [ ] If the plugin declares `filesystem`, `registry`, `launcher` or `login`: `minApp` is at least the first Questkeep version with them (0.7.0)
 - [ ] I listed the permissions the plugin asks for and why (stores), or what the extension does with its trust (extensions):
 
 <!-- describe permissions / extension behavior here -->

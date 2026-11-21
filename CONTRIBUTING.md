@@ -92,8 +92,24 @@ through [SECURITY.md](SECURITY.md).
   built from that source.
 - **No obfuscated code:** no minified-only or obfuscated sources, no hidden downloads of code
   at run time.
-- **Permissions (stores):** the permissions in `plugin.json` (network hosts, folders, ...) are
-  the minimum the plugin needs, and the description says what they are for.
+- **Permissions (stores):** every permission in `plugin.json` (`http` hosts, `read`/`write`
+  folders, `filesystem`, `registry`, `launcher`, `login`) is the minimum the plugin needs, and the
+  description and the PR say what each is for.
+- **Broad access (`filesystem` or `registry`):** such a store can read everything the user can,
+  and what it reads can only leave the PC through its `permissions.http` hosts and
+  `login.domains`, so those get the most attention:
+  - No wildcard hosts and no shared-hosting domains (`*.github.io`, `*.pages.dev`, storage
+    buckets and similar) in `http` or `login.domains`: anyone can put content on them.
+    `scripts/validate.mjs` rejects the common ones.
+  - `http://localhost` (or any `http://` host) needs a reason stated in the PR.
+  - Hosts are the store's own (API, CDN, sign-in). Explain every host in the PR.
+  - Tokens go to the system keyring through the SDK's `secrets`, never to `/data`: any plugin
+    with `filesystem` can read that.
+  - An update that adds `filesystem`, `registry`, a host, a sign-in domain or a launcher program
+    is reviewed like a new plugin.
+- **`minApp`:** older Questkeep versions ignore `filesystem`, `registry`, `launcher` and `login`,
+  so a plugin that declares any of them must set `minApp` to the first version that has them
+  (0.7.0 or later). CI checks this.
 - **Extension trust:** extensions run as trusted code, so review reads their JavaScript. They must
   do what the description says and nothing else.
 - **Metadata:** accurate name, summary and description, `kinds` matches what the plugin brings,
