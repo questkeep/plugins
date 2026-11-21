@@ -33,10 +33,33 @@ scripts/build-index.mjs      writes site/index.json and copies icons to site/ico
 
 ## Development
 
-Node 24, no dependencies.
+Node 24 (installed by mise, see the end of this file), no dependencies.
 
 ```
 node --test scripts/*.test.mjs    # tests
 node scripts/validate.mjs         # check plugins/ (add --online [--all] to download the zips)
 node scripts/build-index.mjs      # writes site/
 ```
+
+## Setting up as a contributor
+
+1. **Install [mise](https://mise.jdx.dev)**, which installs the right toolchain:
+
+   Linux and macOS:
+
+   ```bash
+   curl https://mise.run | sh
+   ```
+
+   macOS with Homebrew: `brew install mise`
+
+   Windows:
+
+   ```powershell
+   winget install jdx.mise
+   ```
+
+   Then [activate mise in your shell](https://mise.jdx.dev/getting-started.html#activate-mise) and
+   open a new terminal.
+
+2. **Run `mise install`** in the repository folder.
