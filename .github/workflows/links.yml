@@ -18,9 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "24"
+      - uses: jdx/mise-action@v5
 
       - name: Validate every version online
         run: node scripts/validate.mjs --online --all

@@ -1,0 +1,4 @@
+# Toolchain of this repository, installed by `mise install` (https://mise.jdx.dev).
+# CI uses the same file (jdx/mise-action), so local and CI versions cannot drift.
+[tools]
+node = "24"
