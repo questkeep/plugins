@@ -1,59 +1,20 @@
 name: Update toolchain
 
-# Weekly pull request that bumps the exact versions pinned in mise.toml (Node, pnpm, ...) to the
-# newest release that is at least two days old (the same minimum age as pnpm and Cargo use for
-# dependencies). Dependabot cannot update mise.toml.
+# Weekly pull request that bumps the exact versions pinned in mise.toml (releases at least two days
+# old). The logic lives in questkeep/workflows; `tools` maps every tool in mise.toml to a version
+# label (latest, lts or a version prefix). Keep it in sync with mise.toml.
 on:
   schedule:
     # Fridays, 13:00 UTC (afternoon in Europe).
     - cron: "0 13 * * 5"
   workflow_dispatch:
 
-concurrency:
-  group: update-toolchain
-  cancel-in-progress: false
-
 permissions:
   contents: write
   pull-requests: write
 
-env:
-  BRANCH: chore/mise-upgrade
-
 jobs:
   upgrade:
-    name: Upgrade mise tools
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: jdx/mise-action@v5
-        with:
-          # Only the mise binary: `mise upgrade` installs what it upgrades.
-          install: false
-          cache: false
-
-      - name: Upgrade the pinned versions
-        run: |
-          mise trust
-          mise upgrade --bump --minimum-release-age 2d --no-prune
-
-      - name: Open or update the pull request
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if git diff --quiet -- mise.toml; then
-            echo "mise.toml is up to date."
-            exit 0
-          fi
-          changes="$(git diff -U0 -- mise.toml | grep -E '^[+-][a-z]' || true)"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -C "$BRANCH"
-          git commit -m "build(deps): update mise tools" -- mise.toml
-          git push --force origin "$BRANCH"
-          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')" ]; then
-            gh pr create --base "${{ github.event.repository.default_branch }}" --head "$BRANCH" \
-              --title "build(deps): update mise tools" \
-              --body "$(printf 'Newest releases that are at least 2 days old (`mise upgrade --bump --minimum-release-age 2d`).\n\n```diff\n%s\n```\n\nPull requests opened by GITHUB_TOKEN do not start CI: push an empty commit or close and reopen this pull request to run the checks.' "$changes")"
-          fi
+    uses: questkeep/workflows/.github/workflows/update-toolchain.yml@main
+    with:
+      tools: '{"node": "lts"}'
