@@ -18,3 +18,6 @@ Every plugin is reviewed in a pull request before it is listed, and every versio
 SHA-256, so a compromised plugin repository cannot change what a listed version contains.
 Store plugins run sandboxed; extensions run as trusted code, which Questkeep warns about at
 install time.
+
+A plugin with `filesystem` or `registry` access that sends data to hosts its function does not
+need counts as abusing its permissions: report it as above.

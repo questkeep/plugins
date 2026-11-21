@@ -17,6 +17,33 @@ export const SEMVER_RE =
 export const KINDS = ["store", "extension", "theme"];
 export const MAX_ICON_BYTES = 200 * 1024;
 export const MAX_DOWNLOAD_BYTES = 100 * 1024 * 1024;
+// The first Questkeep version that knows the permissions `filesystem`, `registry`, `launcher` and
+// `login`. Older versions ignore them, so plugins using them must set minApp at least this high.
+// Correct this if the release that ships them gets another number.
+export const MIN_APP_BROAD = "0.7.0";
+// Anyone can put content on these, so a plugin that can read the user's files or registry must not
+// send data to them (matched as the host itself or any subdomain).
+export const SHARED_HOSTING_DOMAINS = [
+  "github.io",
+  "githubusercontent.com",
+  "pages.dev",
+  "workers.dev",
+  "netlify.app",
+  "vercel.app",
+  "herokuapp.com",
+  "web.app",
+  "firebaseapp.com",
+  "s3.amazonaws.com",
+  "amazonaws.com",
+  "blob.core.windows.net",
+  "azurewebsites.net",
+  "glitch.me",
+  "repl.co",
+  "ngrok.io",
+  "trycloudflare.com",
+  "dropboxusercontent.com",
+  "drive.google.com",
+];
 
 const META_FIELDS = ["id", "name", "summary", "description", "author", "repository", "homepage", "license", "tags", "kinds"];
 const META_REQUIRED = ["id", "name", "summary", "description", "author", "repository", "license", "kinds"];
@@ -323,6 +350,50 @@ async function download(url, dest) {
   return buf;
 }
 
+/** Host part of a `permissions.http` / `login.domains` entry (scheme, port and path removed, lowercase). */
+function hostOf(entry) {
+  return entry
+    .trim()
+    .toLowerCase()
+    .replace(/^[a-z][a-z0-9+.-]*:\/\//, "")
+    .replace(/[/?#].*$/, "")
+    .replace(/:\d+$/, "");
+}
+
+/**
+ * Checks the permissions of a manifest read from a release zip against the registry rules.
+ * `entry` is the versions.json entry (for minApp). Returns { errors, warnings } (messages).
+ */
+export function checkManifestPermissions(manifest, entry) {
+  const errors = [];
+  const warnings = [];
+  const perms = isObject(manifest?.permissions) ? manifest.permissions : {};
+  const broadRead = perms.filesystem !== undefined || perms.registry !== undefined;
+  if (broadRead) {
+    const hosts = [];
+    if (Array.isArray(perms.http)) for (const h of perms.http) if (isString(h)) hosts.push(["permissions.http", h]);
+    const domains = isObject(perms.login) && Array.isArray(perms.login.domains) ? perms.login.domains : [];
+    for (const d of domains) if (isString(d)) hosts.push(["permissions.login.domains", d]);
+    for (const [where, h] of hosts) {
+      const host = hostOf(h);
+      if (host.startsWith("*.") || host.includes("*"))
+        errors.push(`${where} entry ${JSON.stringify(h)} is a wildcard; a plugin with filesystem or registry access must list exact hosts`);
+      else if (SHARED_HOSTING_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`)))
+        errors.push(`${where} entry ${JSON.stringify(h)} is a shared-hosting domain; a plugin with filesystem or registry access must not send data there`);
+      if (/^http:\/\//i.test(h.trim())) warnings.push(`${where} entry ${JSON.stringify(h)} uses http://, which needs a stated reason in the pull request`);
+    }
+  }
+  const usesNew = broadRead || perms.launcher !== undefined || perms.login !== undefined;
+  if (usesNew) {
+    const min = entry?.minApp;
+    if (!isString(min) || !SEMVER_RE.test(min))
+      errors.push(`plugin.json uses filesystem, registry, launcher or login, so the entry needs "minApp" of at least ${MIN_APP_BROAD}`);
+    else if (compareSemver(min, MIN_APP_BROAD) < 0)
+      errors.push(`"minApp" is ${min}, but filesystem, registry, launcher and login need at least ${MIN_APP_BROAD}`);
+  }
+  return { errors, warnings };
+}
+
 /** Checks one version entry against its downloaded zip. Returns messages. */
 export async function checkVersionOnline(id, entry, workDir) {
   const out = [];
@@ -356,6 +427,9 @@ export async function checkVersionOnline(id, entry, workDir) {
   if (manifest.version !== entry.version) out.push(`${entry.version}: plugin.json version is ${JSON.stringify(manifest.version)}`);
   if (manifest.apiVersion !== entry.apiVersion)
     out.push(`${entry.version}: plugin.json apiVersion is ${JSON.stringify(manifest.apiVersion)}, entry says ${entry.apiVersion}`);
+  const perm = checkManifestPermissions(manifest, entry);
+  out.push(...perm.errors.map((m) => `${entry.version}: ${m}`));
+  for (const w of perm.warnings) console.warn(`warning: plugins/${id}/versions.json: ${entry.version}: ${w}`);
   return out;
 }
 
