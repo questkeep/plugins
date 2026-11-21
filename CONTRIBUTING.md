@@ -14,7 +14,7 @@ from its `plugin.json`: 2 to 64 lowercase letters, digits and dashes, not starti
 3. Compute the hash of the exact file attached to the release:
    `sha256sum my-plugin-0.1.0.zip` (Linux, macOS, Git Bash) or
    `(Get-FileHash my-plugin-0.1.0.zip -Algorithm SHA256).Hash.ToLower()` (PowerShell).
-4. Run `node scripts/validate.mjs --online` (Node 24). CI runs the same on your pull request.
+4. Run `node scripts/validate.mjs --online` (Node 26). CI runs the same on your pull request.
 5. Open the pull request and fill in the checklist.
 
 ### meta.json

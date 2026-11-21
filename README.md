@@ -33,7 +33,7 @@ scripts/build-index.mjs      writes site/index.json and copies icons to site/ico
 
 ## Development
 
-Node 24 (installed by mise, see the end of this file), no dependencies.
+Node 26 (installed by mise, see the end of this file), no dependencies.
 
 ```
 node --test scripts/*.test.mjs    # tests
