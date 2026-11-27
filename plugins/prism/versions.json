@@ -1,0 +1,12 @@
+[
+  {
+    "version": "0.1.1",
+    "url": "https://github.com/questkeep/plugin-prism/releases/download/v0.1.1/prism-0.1.1.zip",
+    "sha256": "fbd9a8aff4d8c9f2a5aaa91005eb7fc7e2a37fb2c8cc4cbffdfe582c9a2c0afe",
+    "size": 113025,
+    "apiVersion": 1,
+    "minApp": "0.8.0",
+    "released": "2026-11-27",
+    "notes": "Uses the real Prism Launcher logo as the plugin icon and Prism's official monochrome logo for the store icon."
+  }
+]
