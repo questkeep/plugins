@@ -1,0 +1,12 @@
+[
+  {
+    "version": "0.1.0",
+    "url": "https://github.com/questkeep/plugin-prism/releases/download/v0.1.0/prism-0.1.0.zip",
+    "sha256": "cb797527ea5e05f2caed5b9820f0bae5438a667d3f5066e19c57f4ae8f591ce8",
+    "size": 111906,
+    "apiVersion": 1,
+    "minApp": "0.8.0",
+    "released": "2026-11-27",
+    "notes": "First release: Prism Launcher as a plugin. It lists your Prism Launcher instances with their icons, playtime and last-played date, starts them through Prism, and opens Prism from the Open launcher menu, like the Prism store that was built into Questkeep (same store id and game ids, so imported instances keep their playtime and settings). The \"New Minecraft instance\" add-game option is not available in the plugin: open Prism and press Ctrl+N. It asks for read-only access to your files and the Windows registry to find Prism, and has no web access."
+  }
+]

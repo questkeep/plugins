@@ -1,0 +1,13 @@
+{
+  "id": "prism",
+  "name": "Prism Launcher",
+  "summary": "Lists your Prism Launcher (Minecraft) instances as games, with their icons and running time.",
+  "description": "Lists your Prism Launcher (Minecraft) instances, one game per instance, with their icons and running time, and opens Prism Launcher from the Open launcher menu. Replaces the Prism Launcher store that was built into Questkeep up to 0.7.0, with the same games.",
+  "author": "Questkeep",
+  "repository": "https://github.com/questkeep/plugin-prism",
+  "license": "MIT",
+  "tags": ["minecraft", "launcher"],
+  "kinds": [
+    "store"
+  ]
+}
